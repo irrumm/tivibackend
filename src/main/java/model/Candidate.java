@@ -33,4 +33,12 @@ public class Candidate {
         // Compare the data members and return accordingly
         return name.equals(candidate.getName()) && team.equals(candidate.getTeam()) && voteCount == candidate.getVoteCount();
     }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (voteCount ^ (voteCount >>> 16));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + team.hashCode();
+        return result;
+    }
 }
