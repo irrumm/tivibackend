@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.gretty' version '3.0.6'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.11'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'org.springframework:spring-context:5.3.10'
+    implementation 'org.springframework:spring-webmvc:5.3.10'
+    implementation 'org.hibernate:hibernate-validator:6.2.0.Final'
+    implementation 'io.springfox:springfox-swagger2:2.5.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.5.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def sourceDir = file('src')
+def libDir = file('lib')
+def classesDir = file('out')
+
+
+jar {
+    from(classesDir)
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+
+    from(libDir.listFiles().collect { it.isDirectory() ? it : zipTree(it) })
+}
+
+gretty {
+    contextPath = '/'
+}
+
+task runMyCode(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+}
